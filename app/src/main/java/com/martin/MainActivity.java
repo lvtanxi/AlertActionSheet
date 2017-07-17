@@ -14,6 +14,8 @@ import com.martin.widget.SaActionSheetDialog.OnSheetItemClickListener;
 import com.martin.widget.SaActionSheetDialog.SheetItemColor;
 import com.martin.widget.SaAlertDialog;
 
+import java.util.Arrays;
+
 
 public class MainActivity extends AppCompatActivity implements OnClickListener, OnSheetItemClickListener {
     private Button btn1;
@@ -64,18 +66,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                         .builder()
                         .setCancelable(false)
                         .setCanceledOnTouchOutside(false)
-                        .addSheetItem("发送给好友", SheetItemColor.Blue,
-                                this)
-                        .addSheetItem("转载到空间相册", SheetItemColor.Blue,
-                                this)
-                        .addSheetItem("上传到群相册", SheetItemColor.Blue,
-                                this)
-                        .addSheetItem("保存到手机", SheetItemColor.Blue,
-                                this)
-                        .addSheetItem("收藏", SheetItemColor.Blue,
-                                this)
-                        .addSheetItem("查看聊天图片", SheetItemColor.Blue,
-                                this).show();
+                        .addSheetItems(Arrays.asList("发送给好友", "转载到空间相册","上传到群相册","保存到手机","收藏","查看聊天图片"), new OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                Toast.makeText(MainActivity.this, "asdf" + which, Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
                 break;
             case R.id.btn3:
                 new SaActionSheetDialog(MainActivity.this)
@@ -187,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                     public void onClick(View v) {
 
                     }
-                }).show();
+                }).showWithAnim();
                 break;
             case R.id.btn5:
                 new SaAlertDialog(MainActivity.this).builder()

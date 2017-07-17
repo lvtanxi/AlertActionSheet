@@ -1,6 +1,8 @@
 package com.martin.widget;
 
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Display;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -18,7 +21,6 @@ import android.widget.TextView;
 public class SaAlertDialog {
     private Context context;
     private Dialog dialog;
-    private LinearLayout lLayout_bg;
     private TextView txt_title;
     private TextView txt_msg;
     private Button btn_neg;
@@ -29,20 +31,20 @@ public class SaAlertDialog {
     private boolean showMsg = false;
     private boolean showPosBtn = false;
     private boolean showNegBtn = false;
+    private View view;
 
     public SaAlertDialog(Context context) {
         this.context = context;
-        WindowManager windowManager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         display = windowManager.getDefaultDisplay();
     }
 
     public SaAlertDialog builder() {
         // 获取Dialog布局
-        View view = LayoutInflater.from(context).inflate(R.layout.view_alertdialog, null);
+        view = LayoutInflater.from(context).inflate(R.layout.view_alertdialog, null);
 
         // 获取自定义Dialog布局中的控件
-        lLayout_bg = (LinearLayout) view.findViewById(R.id.lLayout_bg);
+        LinearLayout lLayout_bg = (LinearLayout) view.findViewById(R.id.lLayout_bg);
         txt_title = (TextView) view.findViewById(R.id.txt_title);
         txt_title.setVisibility(View.GONE);
         txt_msg = (TextView) view.findViewById(R.id.txt_msg);
@@ -90,8 +92,7 @@ public class SaAlertDialog {
         return this;
     }
 
-    public SaAlertDialog setPositiveButton(String text,
-                                           final OnClickListener listener) {
+    public SaAlertDialog setPositiveButton(String text, final OnClickListener listener) {
         showPosBtn = true;
         if ("".equals(text)) {
             btn_pos.setText("确定");
@@ -174,5 +175,16 @@ public class SaAlertDialog {
     public void show() {
         setLayout();
         dialog.show();
+    }
+
+    public void showWithAnim() {
+        show();
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.3f, 1.05f, 0.9f, 1);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.3f, 1.05f, 0.9f, 1);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(500);
+        animatorSet.setInterpolator(new BounceInterpolator());
+        animatorSet.playTogether(scaleX, scaleY);
+        animatorSet.start();
     }
 }

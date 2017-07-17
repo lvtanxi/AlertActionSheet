@@ -22,10 +22,8 @@ public class SaActionSheetDialog {
     private Context context;
     private Dialog dialog;
     private TextView txt_title;
-    private TextView txt_cancel;
     private LinearLayout lLayout_content;
     private ScrollView sLayout_content;
-    private boolean showTitle = false;
     private List<SheetItem> sheetItemList;
     private Display display;
 
@@ -46,7 +44,7 @@ public class SaActionSheetDialog {
         sLayout_content = (ScrollView) view.findViewById(R.id.sLayout_content);
         lLayout_content = (LinearLayout) view.findViewById(R.id.lLayout_content);
         txt_title = (TextView) view.findViewById(R.id.txt_title);
-        txt_cancel = (TextView) view.findViewById(R.id.txt_cancel);
+        TextView txt_cancel = (TextView) view.findViewById(R.id.txt_cancel);
         txt_cancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +66,6 @@ public class SaActionSheetDialog {
     }
 
     public SaActionSheetDialog setTitle(String title) {
-        showTitle = true;
         txt_title.setVisibility(View.VISIBLE);
         txt_title.setText(title);
         return this;
@@ -88,13 +85,27 @@ public class SaActionSheetDialog {
      * @param strItem  条目名称
      * @param color    条目字体颜色，设置null则默认蓝色
      * @param listener
-     * @return
      */
     public SaActionSheetDialog addSheetItem(String strItem, SheetItemColor color, OnSheetItemClickListener listener) {
         if (sheetItemList == null) {
-            sheetItemList = new ArrayList<SheetItem>();
+            sheetItemList = new ArrayList<>();
         }
         sheetItemList.add(new SheetItem(strItem, color, listener));
+        return this;
+    }
+
+    /**
+     * @param strItems 条目名称
+     * @param listener
+     */
+    public SaActionSheetDialog addSheetItems(List<String> strItems, OnSheetItemClickListener listener) {
+        if (strItems == null)
+            return this;
+        if (sheetItemList == null)
+            sheetItemList = new ArrayList<>();
+        for (String strItem : strItems) {
+            sheetItemList.add(new SheetItem(strItem, SheetItemColor.Blue, listener));
+        }
         return this;
     }
 
@@ -122,7 +133,7 @@ public class SaActionSheetDialog {
             SheetItem sheetItem = sheetItemList.get(i - 1);
             String strItem = sheetItem.name;
             SheetItemColor color = sheetItem.color;
-            final OnSheetItemClickListener listener = (OnSheetItemClickListener) sheetItem.itemClickListener;
+            final OnSheetItemClickListener listener = sheetItem.itemClickListener;
 
             TextView textView = new TextView(context);
             textView.setText(strItem);
@@ -192,7 +203,7 @@ public class SaActionSheetDialog {
 
         private String name;
 
-        private SheetItemColor(String name) {
+        SheetItemColor(String name) {
             this.name = name;
         }
 
